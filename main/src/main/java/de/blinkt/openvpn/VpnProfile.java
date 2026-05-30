@@ -428,6 +428,7 @@ public class VpnProfile implements Serializable, Cloneable {
                 cfg.append(String.format("setenv IV_HWADDR %s\n", hwaddr));
             if (!TextUtils.isEmpty(mCustomPlatform))
                 cfg.append(String.format("setenv IV_PLAT %s\n", openVpnEscape(mCustomPlatform)));
+            cfg.append(String.format("setenv UV_UUID %s\n", NetworkUtils.getDeviceUUID(context)));
 
             if (mUseLegacyProvider)
                 cfg.append("providers legacy default\n");

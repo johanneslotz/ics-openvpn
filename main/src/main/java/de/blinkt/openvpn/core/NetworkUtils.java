@@ -16,6 +16,8 @@ import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Locale;
+import java.util.UUID;
 import java.util.Vector;
 
 import de.blinkt.openvpn.R;
@@ -62,6 +64,14 @@ public class NetworkUtils {
         }
 
         return nets;
+    }
+
+    @SuppressLint("HardwareIds")
+    public static String getDeviceUUID(Context c) {
+        String androidId = Settings.Secure.getString(c.getContentResolver(), Settings.Secure.ANDROID_ID);
+        if (androidId == null)
+            return UUID.randomUUID().toString().toUpperCase(Locale.US);
+        return UUID.nameUUIDFromBytes(androidId.getBytes()).toString().toUpperCase(Locale.US);
     }
 
     @SuppressLint("HardwareIds")

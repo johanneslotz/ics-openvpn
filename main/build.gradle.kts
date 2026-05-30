@@ -136,6 +136,9 @@ android {
     }
 
     buildTypes {
+        getByName("debug") {
+            applicationIdSuffix = ".debug"
+        }
         getByName("release") {
             if (project.hasProperty("icsopenvpnDebugSign")) {
                 logger.warn("property icsopenvpnDebugSign set, using debug signing for release")

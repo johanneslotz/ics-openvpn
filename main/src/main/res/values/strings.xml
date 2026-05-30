@@ -376,6 +376,12 @@
     <string name="permission_revoked">VPN permission revoked by OS (e.g. other VPN program started), stopping VPN</string>
     <string name="pushpeerinfo">Push Peer info</string>
     <string name="pushpeerinfosummary">Send extra information to the server, e.g. SSL version and Android version</string>
+    <string name="custom_hwaddr_title">Override IV_HWADDR</string>
+    <string name="custom_hwaddr_summary">Custom hardware address sent to the server. Leave empty to use the device-derived default.</string>
+    <string name="custom_hwaddr_dialog">Enter a custom MAC address (e.g. aa:bb:cc:dd:ee:ff) to override the automatically generated IV_HWADDR value.</string>
+    <string name="custom_platform_version_title">Override IV_PLAT_VER</string>
+    <string name="custom_platform_version_summary">Custom platform version string sent to the server. Leave empty to use the device-derived default.</string>
+    <string name="custom_platform_version_dialog">Enter a custom platform version string to override the automatically generated IV_PLAT_VER value.</string>
     <string name="pw_request_dialog_title">Need %1$s</string>
     <string name="pw_request_dialog_prompt">Please enter the password for profile %1$s</string>
     <string name="menu_use_inline_data">Use inline data</string>

@@ -227,12 +227,15 @@ public class OpenVPNThreadv3 extends ClientAPI_OpenVPNClient implements Runnable
         config.setTunPersist(mVp.mPersistTun);
         config.setGuiVersion(VpnProfile.getVersionEnvString(mService));
         config.setSsoMethods("openurl,webauth,crtext");
-        config.setPlatformVersion(mVp.getPlatformVersionEnvString());
+        String platformVersion = android.text.TextUtils.isEmpty(mVp.mCustomPlatformVersion)
+                ? mVp.getPlatformVersionEnvString() : mVp.mCustomPlatformVersion;
+        config.setPlatformVersion(platformVersion);
         config.setExternalPkiAlias("extpki");
         config.setCompressionMode("asym");
 
-
-        config.setHwAddrOverride(NetworkUtils.getFakeMacAddrFromSAAID(mService));
+        String hwAddr = android.text.TextUtils.isEmpty(mVp.mCustomHwAddr)
+                ? NetworkUtils.getFakeMacAddrFromSAAID(mService) : mVp.mCustomHwAddr;
+        config.setHwAddrOverride(hwAddr);
         config.setInfo(true);
         config.setAllowLocalLanAccess(mVp.mAllowLocalLAN);
         boolean retryOnAuthFailed = mVp.mAuthRetry == AUTH_RETRY_NOINTERACT;

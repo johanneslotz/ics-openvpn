@@ -180,6 +180,8 @@ public class VpnProfile implements Serializable, Cloneable {
     public boolean mUseLegacyProvider = false;
     public String mTlSCertProfile = "";
     public long mCreationDate = 0;
+    public String mCustomHwAddr = "";
+    public String mCustomPlatformVersion = "";
 
 
     class ChangeLogEntry implements Serializable
@@ -416,9 +418,11 @@ public class VpnProfile implements Serializable, Cloneable {
 
             cfg.append(String.format("setenv IV_GUI_VER %s \n", openVpnEscape(getVersionEnvString(context))));
             cfg.append("setenv IV_SSO openurl,webauth,crtext\n");
-            String versionString = getPlatformVersionEnvString();
+            String versionString = TextUtils.isEmpty(mCustomPlatformVersion)
+                    ? getPlatformVersionEnvString() : mCustomPlatformVersion;
             cfg.append(String.format("setenv IV_PLAT_VER %s\n", openVpnEscape(versionString)));
-            String hwaddr = NetworkUtils.getFakeMacAddrFromSAAID(context);
+            String hwaddr = TextUtils.isEmpty(mCustomHwAddr)
+                    ? NetworkUtils.getFakeMacAddrFromSAAID(context) : mCustomHwAddr;
             if (hwaddr != null)
                 cfg.append(String.format("setenv IV_HWADDR %s\n", hwaddr));
 

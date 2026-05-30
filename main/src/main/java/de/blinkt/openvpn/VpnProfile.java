@@ -182,6 +182,7 @@ public class VpnProfile implements Serializable, Cloneable {
     public long mCreationDate = 0;
     public String mCustomHwAddr = "";
     public String mCustomPlatformVersion = "";
+    public String mCustomPlatform = "";
 
 
     class ChangeLogEntry implements Serializable
@@ -425,6 +426,8 @@ public class VpnProfile implements Serializable, Cloneable {
                     ? NetworkUtils.getFakeMacAddrFromSAAID(context) : mCustomHwAddr;
             if (hwaddr != null)
                 cfg.append(String.format("setenv IV_HWADDR %s\n", hwaddr));
+            if (!TextUtils.isEmpty(mCustomPlatform))
+                cfg.append(String.format("setenv IV_PLAT %s\n", openVpnEscape(mCustomPlatform)));
 
             if (mUseLegacyProvider)
                 cfg.append("providers legacy default\n");
@@ -433,6 +436,8 @@ public class VpnProfile implements Serializable, Cloneable {
                 cfg.append(String.format("tls-cert-profile %s\n", mTlSCertProfile));
         } else {
             cfg.append("# Config for OpenVPN 3 C++\n");
+            if (!TextUtils.isEmpty(mCustomPlatform))
+                cfg.append(String.format("setenv IV_PLAT %s\n", openVpnEscape(mCustomPlatform)));
         }
 
 

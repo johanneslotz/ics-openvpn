@@ -379,6 +379,9 @@
     <string name="custom_hwaddr_title">Override IV_HWADDR</string>
     <string name="custom_hwaddr_summary">Custom hardware address sent to the server. Leave empty to use the device-derived default.</string>
     <string name="custom_hwaddr_dialog">Enter a custom MAC address (e.g. aa:bb:cc:dd:ee:ff) to override the automatically generated IV_HWADDR value.</string>
+    <string name="custom_platform_title">Override IV_PLAT</string>
+    <string name="custom_platform_summary">Custom platform identifier sent to the server (e.g. win, linux, mac). Leave empty to use the default (android).</string>
+    <string name="custom_platform_dialog">Enter a platform identifier (e.g. win, linux, mac) to override the automatically set IV_PLAT value. Useful when the server rejects the android platform.</string>
     <string name="custom_platform_version_title">Override IV_PLAT_VER</string>
     <string name="custom_platform_version_summary">Custom platform version string sent to the server. Leave empty to use the device-derived default.</string>
     <string name="custom_platform_version_dialog">Enter a custom platform version string to override the automatically generated IV_PLAT_VER value.</string>

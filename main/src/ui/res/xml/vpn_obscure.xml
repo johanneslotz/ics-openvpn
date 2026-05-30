@@ -48,6 +48,13 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/client_behaviour">
         <EditTextPreference
+            android:dialogMessage="@string/custom_platform_dialog"
+            android:key="customPlatform"
+            android:persistent="false"
+            android:summary="@string/custom_platform_summary"
+            android:title="@string/custom_platform_title" />
+
+        <EditTextPreference
             android:dialogMessage="@string/custom_hwaddr_dialog"
             android:key="customHwAddr"
             android:persistent="false"

@@ -27,6 +27,7 @@ public class Settings_Obscure extends OpenVpnPreferencesFragment implements Pref
     private EditTextPreference mMssFixValue;
     private CheckBoxPreference mMssFixCheckBox;
     private CheckBoxPreference mPeerInfo;
+    private EditTextPreference mCustomPlatform;
     private EditTextPreference mCustomHwAddr;
     private EditTextPreference mCustomPlatformVersion;
 
@@ -123,6 +124,7 @@ public class Settings_Obscure extends OpenVpnPreferencesFragment implements Pref
         mMssFixValue.setOnPreferenceChangeListener(this);
         mTunMtu = (EditTextPreference) findPreference("tunmtu");
         mTunMtu.setOnPreferenceChangeListener(this);
+        mCustomPlatform = (EditTextPreference) findPreference("customPlatform");
         mCustomHwAddr = (EditTextPreference) findPreference("customHwAddr");
         mCustomPlatformVersion = (EditTextPreference) findPreference("customPlatformVersion");
 
@@ -160,6 +162,7 @@ public class Settings_Obscure extends OpenVpnPreferencesFragment implements Pref
         mTunMtu.setText(String.valueOf(tunmtu));
         setMtuSummary(tunmtu);
 
+        mCustomPlatform.setText(mProfile.mCustomPlatform);
         mCustomHwAddr.setText(mProfile.mCustomHwAddr);
         mCustomPlatformVersion.setText(mProfile.mCustomPlatformVersion);
 
@@ -189,6 +192,7 @@ public class Settings_Obscure extends OpenVpnPreferencesFragment implements Pref
             mProfile.mMssFix=0;
 
         mProfile.mTunMtu = Integer.parseInt(mTunMtu.getText());
+        mProfile.mCustomPlatform = mCustomPlatform.getText() != null ? mCustomPlatform.getText() : "";
         mProfile.mCustomHwAddr = mCustomHwAddr.getText() != null ? mCustomHwAddr.getText() : "";
         mProfile.mCustomPlatformVersion = mCustomPlatformVersion.getText() != null ? mCustomPlatformVersion.getText() : "";
         saveSettingsBehaviour();

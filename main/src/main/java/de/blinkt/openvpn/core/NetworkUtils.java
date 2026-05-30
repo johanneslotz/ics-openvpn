@@ -77,7 +77,7 @@ public class NetworkUtils {
         StringBuilder ret = new StringBuilder();
         if (saaid.length() >= 6) {
             byte[] sb = saaid.getBytes();
-            for (int b = 0; b <= 6; b++) {
+            for (int b = 0; b < 6; b++) {
                 if (b != 0)
                     ret.append(":");
                 int v = sb[b] & 0xFF;

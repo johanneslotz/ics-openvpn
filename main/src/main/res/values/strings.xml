@@ -385,6 +385,9 @@
     <string name="custom_platform_version_title">Override IV_PLAT_VER</string>
     <string name="custom_platform_version_summary">Custom platform version string sent to the server. Leave empty to use the device-derived default.</string>
     <string name="custom_platform_version_dialog">Enter a custom platform version string to override the automatically generated IV_PLAT_VER value.</string>
+    <string name="custom_uuid_title">Override UV_UUID</string>
+    <string name="custom_uuid_summary">Custom device UUID (UV_UUID) sent as peer info. Leave empty to use the device-derived UUID.</string>
+    <string name="custom_uuid_dialog">Enter a UUID to send as UV_UUID (e.g. 261A7D76-1D9A-5F94-8033-5B42F496F19F). Used by some servers to identify trusted devices and skip extra authentication.</string>
     <string name="pw_request_dialog_title">Need %1$s</string>
     <string name="pw_request_dialog_prompt">Please enter the password for profile %1$s</string>
     <string name="menu_use_inline_data">Use inline data</string>

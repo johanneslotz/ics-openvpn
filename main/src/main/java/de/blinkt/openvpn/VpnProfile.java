@@ -183,6 +183,7 @@ public class VpnProfile implements Serializable, Cloneable {
     public String mCustomHwAddr = "";
     public String mCustomPlatformVersion = "";
     public String mCustomPlatform = "";
+    public String mCustomUUID = "";
 
 
     class ChangeLogEntry implements Serializable
@@ -418,7 +419,7 @@ public class VpnProfile implements Serializable, Cloneable {
             cfg.append("management-hold\n\n");
 
             cfg.append(String.format("setenv IV_GUI_VER %s \n", openVpnEscape(getVersionEnvString(context))));
-            cfg.append("setenv IV_SSO openurl,webauth,crtext\n");
+            cfg.append("setenv IV_SSO webauth,crtext\n");
             String versionString = TextUtils.isEmpty(mCustomPlatformVersion)
                     ? getPlatformVersionEnvString() : mCustomPlatformVersion;
             cfg.append(String.format("setenv IV_PLAT_VER %s\n", openVpnEscape(versionString)));
@@ -428,7 +429,9 @@ public class VpnProfile implements Serializable, Cloneable {
                 cfg.append(String.format("setenv IV_HWADDR %s\n", hwaddr));
             if (!TextUtils.isEmpty(mCustomPlatform))
                 cfg.append(String.format("setenv IV_PLAT %s\n", openVpnEscape(mCustomPlatform)));
-            cfg.append(String.format("setenv UV_UUID %s\n", NetworkUtils.getDeviceUUID(context)));
+            String uuid = TextUtils.isEmpty(mCustomUUID)
+                    ? NetworkUtils.getDeviceUUID(context) : mCustomUUID;
+            cfg.append(String.format("setenv UV_UUID %s\n", uuid));
 
             if (mUseLegacyProvider)
                 cfg.append("providers legacy default\n");

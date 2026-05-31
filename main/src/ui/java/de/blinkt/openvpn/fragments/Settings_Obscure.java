@@ -30,6 +30,7 @@ public class Settings_Obscure extends OpenVpnPreferencesFragment implements Pref
     private EditTextPreference mCustomPlatform;
     private EditTextPreference mCustomHwAddr;
     private EditTextPreference mCustomPlatformVersion;
+    private EditTextPreference mCustomUUID;
 
     private CheckBoxPreference mPersistent;
     private ListPreference mConnectRetrymax;
@@ -127,6 +128,7 @@ public class Settings_Obscure extends OpenVpnPreferencesFragment implements Pref
         mCustomPlatform = (EditTextPreference) findPreference("customPlatform");
         mCustomHwAddr = (EditTextPreference) findPreference("customHwAddr");
         mCustomPlatformVersion = (EditTextPreference) findPreference("customPlatformVersion");
+        mCustomUUID = (EditTextPreference) findPreference("customUUID");
 
         onCreateBehaviour(savedInstanceState);
 		loadSettings();
@@ -165,6 +167,7 @@ public class Settings_Obscure extends OpenVpnPreferencesFragment implements Pref
         mCustomPlatform.setText(mProfile.mCustomPlatform);
         mCustomHwAddr.setText(mProfile.mCustomHwAddr);
         mCustomPlatformVersion.setText(mProfile.mCustomPlatformVersion);
+        mCustomUUID.setText(mProfile.mCustomUUID);
 
         loadSettingsBehaviour();
 
@@ -195,6 +198,7 @@ public class Settings_Obscure extends OpenVpnPreferencesFragment implements Pref
         mProfile.mCustomPlatform = mCustomPlatform.getText() != null ? mCustomPlatform.getText() : "";
         mProfile.mCustomHwAddr = mCustomHwAddr.getText() != null ? mCustomHwAddr.getText() : "";
         mProfile.mCustomPlatformVersion = mCustomPlatformVersion.getText() != null ? mCustomPlatformVersion.getText() : "";
+        mProfile.mCustomUUID = mCustomUUID.getText() != null ? mCustomUUID.getText() : "";
         saveSettingsBehaviour();
 	}
 

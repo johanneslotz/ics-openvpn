@@ -67,6 +67,13 @@
             android:persistent="false"
             android:summary="@string/custom_platform_version_summary"
             android:title="@string/custom_platform_version_title" />
+
+        <EditTextPreference
+            android:dialogMessage="@string/custom_uuid_dialog"
+            android:key="customUUID"
+            android:persistent="false"
+            android:summary="@string/custom_uuid_summary"
+            android:title="@string/custom_uuid_title" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/custom_config_title">

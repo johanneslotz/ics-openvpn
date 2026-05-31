@@ -161,3 +161,94 @@ The old official or main repository was a Mercurial (hg) repository at http://co
 The new Git repository is now at GitHub under https://github.com/schwabe/ics-openvpn
 
 Please read the doc/README before asking questions or starting development.
+
+---
+
+## Appendix: Fork changes — peer info overrides for server compatibility
+
+This branch (`claude/hwaddr-platform-defaults-rUTHy`) adds settings and
+bug fixes to make the Android client interoperate with OpenVPN servers that
+enforce strict peer info checks (platform identity, device UUID, etc.).
+
+### Background
+
+Some corporate OpenVPN servers authenticate clients using the peer info
+variables exchanged during the TLS handshake:
+
+| Variable | Purpose |
+|---|---|
+| `IV_PLAT` | Platform identifier (`android`, `win`, `mac`, …) |
+| `IV_PLAT_VER` | Platform version string |
+| `IV_HWADDR` | Client hardware (MAC) address |
+| `UV_UUID` | Per-device UUID sent by the official OpenVPN Connect client |
+
+Servers that only allow Windows or macOS clients will reject Android
+connections with `AUTH_FAILED,Invalid platform` or `AUTH_FAILED,Required UUID`
+unless the client can override these values.
+
+### New profile settings
+
+All fields are in **Edit profile → Advanced (obscure) settings**
+under the *Client behaviour* section:
+
+| Setting | Profile field | Effect |
+|---|---|---|
+| Override IV_PLAT | `mCustomPlatform` | Replaces the compiled-in platform name (e.g. set to `win` or `mac`) |
+| Override IV_HWADDR | `mCustomHwAddr` | Replaces the auto-derived MAC address sent as `IV_HWADDR` |
+| Override IV_PLAT_VER | `mCustomPlatformVersion` | Replaces the auto-derived platform version string |
+| Override UV_UUID | `mCustomUUID` | Replaces the auto-derived device UUID sent as `UV_UUID` |
+
+When a field is left empty the existing automatic value is used (ANDROID_ID-derived
+MAC / UUID, `uname` version string, compile-time platform name).
+
+### Bug fixes in app code
+
+| File | Fix |
+|---|---|
+| `core/NetworkUtils.java` | `getFakeMacAddrFromSAAID`: loop bound was `b <= 6` (7 octets) instead of `b < 6` (6 octets), producing an invalid MAC |
+| `VpnProfile.java` | `IV_SSO` changed from `openurl,webauth,crtext` to `webauth,crtext` to match the OpenVPN Connect reference client |
+| `VpnProfile.java` | Auto-generate and send `UV_UUID` from ANDROID_ID via `UUID.nameUUIDFromBytes()` |
+| `LaunchVPN.java` | `showLogWindow()`: replaced `getPackageName() + ".activities.LogWindow"` with hardcoded class name — `getPackageName()` returns the suffixed id (`de.blinkt.openvpn.debug`) with `applicationIdSuffix` set, breaking component lookup |
+| `OpenVPNService.java` (×2) | Same fix for `MainActivity` and `CredentialsPopup` component names |
+
+### Patch to third-party library: OpenVPN2 (`main/src/main/cpp/openvpn`)
+
+> **This is a source-level patch to the vendored OpenVPN 2 submodule.**
+> The change lives at commit `383e642b` on top of upstream `a3f4dcdb`.
+
+File patched: `src/openvpn/ssl.c` — `push_peer_info()` function.
+
+**Problem:** `IV_PLAT` is compiled in at build time via `#if defined(TARGET_ANDROID)` and cannot be overridden by a `setenv IV_PLAT` directive in the config. Similarly, `IV_HWADDR` and `IV_PLAT_VER` from `setenv` are never forwarded to the server at peer-info detail level 2 (the default `--pull` level).
+
+**Changes made:**
+
+1. **`IV_PLAT` override** — before writing the compile-time platform string,
+   check `env_set_get(session->opt->es, "IV_PLAT")`. If a `setenv IV_PLAT`
+   directive exists in the config, use it instead:
+   ```c
+   const char *plat_env = env_set_get(session->opt->es, "IV_PLAT");
+   if (plat_env)
+       buf_printf(&out, "%s\n", plat_env);
+   else { /* original #if TARGET_ANDROID … chain */ }
+   ```
+
+2. **`IV_HWADDR` override** — in the detail-level-3 block, skip the
+   `get_default_gateway()` auto-detection when `IV_HWADDR` is in the env set.
+   Add `IV_HWADDR=` to the env-scanning loop so `setenv IV_HWADDR` is forwarded
+   at detail level ≥ 2.
+
+3. **`IV_PLAT_VER` override** — same pattern: skip `uname()` when
+   `IV_PLAT_VER` is in the env set; add it to the env-scanning loop at
+   detail level ≥ 2.
+
+4. **Diagnostic logging** — added a single `D_TLS_DEBUG_LOW` log line
+   (visible at verbosity ≥ 3) that prints all peer info variables as a
+   `|`-separated line for debugging.
+
+### Build changes
+
+| File | Change |
+|---|---|
+| `main/build.gradle.kts` | `applicationIdSuffix = ".debug"` on the debug build type so the debug APK installs alongside the release APK |
+| `main/build.gradle.kts` | ABI splits disabled (`isEnable = false`) so a single universal APK is produced for sideloading |
+| Submodule pins | `fmt` pinned to 9.1.0 and `asio` to `a12ecff` for compatibility with NDK 30 / clang 21 (fmt ≥ 10 has `consteval` errors) |
